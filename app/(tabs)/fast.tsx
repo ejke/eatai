@@ -3,10 +3,11 @@ import * as Haptics from 'expo-haptics'
 import { useRouter } from 'expo-router'
 import { useFastingStore } from '@/store/fastingStore'
 import { supabase } from '@/lib/supabase'
+import { TimerRing } from '@/components/fasting/TimerRing'
 
 export default function FastScreen() {
   const router = useRouter()
-  const { activeFast, startFast, elapsedHours, progressPercent, isComplete } = useFastingStore()
+  const { activeFast, startFast, elapsedHours, progressPercent } = useFastingStore()
 
   async function handleStartFast() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
@@ -47,11 +48,7 @@ export default function FastScreen() {
     <View className="flex-1 bg-background items-center justify-center px-6">
       {activeFast ? (
         <>
-          {/* TODO: Replace with Skia ring */}
-          <View className="w-48 h-48 rounded-full border-8 border-fast-light items-center justify-center mb-8">
-            <Text className="text-fast text-3xl font-bold">{elapsed.toFixed(1)}h</Text>
-            <Text className="text-text-muted text-sm">of {activeFast.targetHours}h</Text>
-          </View>
+          <TimerRing elapsedHours={elapsed} targetHours={activeFast.targetHours} />
           <Text className="text-text-muted mb-8">{progress.toFixed(0)}% complete</Text>
           <Pressable
             onPress={handleStopFast}
